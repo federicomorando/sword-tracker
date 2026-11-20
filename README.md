@@ -12,7 +12,7 @@ chi ha il link la vede e la modifica. Le modifiche sono persistenti.
   per creare la targhetta; **+ PNG** aggiunge mostri o alleati, anche più copie numerate.
 - **Board**: cambio dell'intervallo degli slot ed **eliminazione** della board (chiunque abbia il link, dopo aver scritto il nome per confermare).
   Ciascuno può eliminare anche solo il proprio personaggio. Le board inutilizzate per `BOARD_TTL_DAYS` giorni vengono cancellate.
-- **Help e nota privacy/cookie** nel footer, non invasivi: il sito non imposta cookie propri e non salva nulla che richieda consenso.
+- **Help, nota privacy/cookie, licenza e link al codice** nel footer, non invasivi: il sito non imposta cookie propri e non salva nulla che richieda consenso.
 
 ## Sviluppo
 `npm install && npm start` (http://localhost:3000), test con `npm test`. Serve Node >= 22.13 (usa `node:sqlite` senza flag).

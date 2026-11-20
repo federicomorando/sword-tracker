@@ -86,6 +86,8 @@ menu { display: flex; gap: .5rem; justify-content: flex-end; padding: 0; margin:
 .help-row details { flex: 0 0 auto; }
 .help-row details[open] { flex-basis: 100%; }
 .help a { color: inherit; }
+.help-meta { opacity: .7; }
+.help-meta a { text-underline-offset: 2px; }
 
 /* gestione board (eliminazione) */
 #owner-zone { margin-top: 1rem; padding-top: .8rem; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: .5rem; align-items: flex-start; }

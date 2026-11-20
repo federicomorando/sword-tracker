@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.2.5 — 2026-11-20
+- Nel footer (home, board, pagina "Board eliminata") compaiono il riferimento alla licenza MIT e il link al repository GitHub.
+
 ## 1.2.4 — 2026-11-20
 - Repository pubblico: licenza MIT, `SECURITY.md`, script `deploy/install.sh` generico (utente e hostname configurabili); la parte specifica della macchina di produzione è fuori dal repo.
 
