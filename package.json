@@ -1,0 +1,24 @@
+{
+  "name": "sword-tracker",
+  "version": "1.2.4",
+  "description": "Tracker dell'iniziativa condiviso per SwORD 2.0",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "start": "node server/index.js",
+    "test": "node --test",
+    "e2e": "node e2e/browser.cjs"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  },
+  "license": "MIT",
+  "author": "Federico Morando",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/federicomorando/sword-tracker.git"
+  }
+}

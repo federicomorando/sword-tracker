@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SwORD Tracker</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main id="gone" hidden>
+    <h1>Board eliminata</h1>
+    <p>Questa board è stata eliminata, insieme a tutte le sue targhette.</p>
+    <p><a href="/">Torna alla pagina iniziale</a> per aprirne o crearne un'altra.</p>
+  </main>
+
+  <main id="home" hidden>
+    <h1>SwORD Tracker</h1>
+    <p>Tracker dell'iniziativa condiviso per SwORD 2.0. Nessuna registrazione: scegli un nome e condividi il link.</p>
+    <form id="home-form">
+      <label>Nome della board
+        <input id="home-slug" placeholder="nome-mio-tracker" maxlength="64" autocomplete="off" required>
+      </label>
+      <button type="submit">Apri / crea</button>
+    </form>
+    <p class="hint privacy-hint">Chiunque abbia il link può vedere e modificare la board: scegli un nome non banale e usa nomi di fantasia, non nomi reali né altri dati personali.</p>
+  </main>
+
+  <div id="board-view" hidden>
+    <header>
+      <h1 id="board-title"></h1>
+      <span id="status" class="status">connessione…</span>
+      <div class="actions">
+        <button id="btn-add-me">+ Il mio personaggio</button>
+        <button id="btn-add-monster">+ PNG</button>
+        <button id="btn-profile" class="secondary">Profilo</button>
+        <button id="btn-config" class="secondary">Board</button>
+        <button id="btn-copy" class="secondary">Copia link</button>
+      </div>
+      <button id="btn-reset-turn" class="reset-turn" title="Tieni premuto per azzerare le spunte del turno">Reset turn<small>tieni premuto</small></button>
+    </header>
+    <div id="error" class="error" hidden></div>
+    <ol id="slots"></ol>
+  </div>
+
+  <footer class="help">
+   <div class="help-row">
+    <details name="info">
+      <summary>Come funziona</summary>
+      <div class="help-body">
+        <p>Una board condivisa per tenere l'ordine d'iniziativa di SwORD 2.0. Chi ha il link la vede e la modifica in tempo reale,
+        senza registrarsi: master e giocatori guardano la stessa colonna di slot e ne spostano le targhette.</p>
+        <ul>
+          <li><b>Spostare</b>: trascina una targhetta su un altro slot, oppure usa ▲▼ (di 1) e +3/−3. Nello stesso slot puoi riordinarle trascinando.</li>
+          <li><b>Ha già agito</b>: la spunta a sinistra segna chi ha agito nel turno e resta anche se la targhetta viene spostata. <b>Reset turn</b> (tienilo premuto) toglie tutte le spunte.</li>
+          <li><b>Targhette</b>: clic sul nome per modificare o eliminare (ciascuno può eliminare il proprio personaggio). <b>+ Il mio personaggio</b> usa il tuo profilo; <b>+ PNG</b> aggiunge mostri o alleati, anche più copie numerate.</li>
+          <li><b>Profilo</b>: ruolo, nome tuo e del personaggio, colore. Vale solo per questa board e resta nel tuo browser.</li>
+          <li><b>Board</b>: cambia l'intervallo degli slot (di base da −1 a 15; le targhette fuori dal nuovo intervallo vanno sullo slot di confine). Da qui puoi anche eliminare la board (chiede conferma).</li>
+        </ul>
+        <p>Ogni indirizzo <code>/nome-board</code> è una board: se non esiste, viene creata aprendolo. Chiunque conosca il link può modificarla,
+        quindi scegli un nome non banale. Le board inutilizzate per circa un anno vengono cancellate.</p>
+      </div>
+    </details>
+    <details name="info">
+      <summary>Privacy e cookie</summary>
+      <div class="help-body">
+        <p>In breve: nessun account, nessuna pubblicità, nessun tracciamento né strumento di analisi, nessuna risorsa di terze parti nella pagina.</p>
+        <ul>
+          <li><b>Cookie</b>: il sito non imposta cookie propri. Quando salvi il tuo profilo, ruolo, nomi e colore restano nella memoria locale del tuo browser
+          (<code>localStorage</code>) per riproporteli alla prossima visita su questa board: il profilo in sé non viene inviato al server e puoi cancellarlo
+          dalle impostazioni del browser. È un dato tecnico che salvi tu per una funzione che usi tu, quindi non serve alcun consenso.</li>
+          <li><b>Dati sulla board</b>: i nomi di giocatori, personaggi e PNG che inserisci, la loro posizione e le spunte sono salvati sul server e visibili a chiunque
+          abbia il link. Non usare nomi reali né altri dati personali: scegli nomi di fantasia, perché chiunque abbia il link vede tutto ciò che scrivi.</li>
+          <li><b>Cancellazione</b>: ciascuno può eliminare il proprio personaggio (clic sul nome → Elimina). La board, con tutti i suoi dati, può essere eliminata subito
+          da chiunque abbia il link, dal menu Board e dopo una conferma; altrimenti viene cancellata automaticamente dopo circa un anno di inattività.</li>
+          <li><b>Indirizzo IP</b>: l'applicazione lo usa solo in memoria, per limitare gli abusi (richieste troppo frequenti); non lo salva nel database né nei propri log.</li>
+          <li><b>Cloudflare</b>: il sito è servito e protetto tramite Cloudflare, che tecnicamente elabora le richieste (compreso l'indirizzo IP) per sicurezza e prestazioni
+          e può impostare cookie tecnici di sicurezza. <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener noreferrer">Informativa di Cloudflare</a>.</li>
+        </ul>
+      </div>
+    </details>
+   </div>
+  </footer>
+
+  <dialog id="dlg-profile">
+    <form method="dialog" id="form-profile">
+      <h2>Il tuo profilo</h2>
+      <p class="hint">Vale solo per questa board e resta nel tuo browser.</p>
+      <p class="hint privacy-hint">I nomi sono visibili a chiunque abbia il link: usa nomi di fantasia, non nomi reali né altri dati personali.</p>
+      <label>Ruolo
+        <select name="role"><option value="player">Giocatore</option><option value="master">Master</option></select>
+      </label>
+      <label>Nome giocatore <input name="playerName" maxlength="40"></label>
+      <label>Nome personaggio <input name="characterName" maxlength="40"></label>
+      <label>Colore della targhetta <input name="color" type="color" value="#3b82f6"></label>
+      <menu><button type="button" value="cancel" class="secondary" data-close>Annulla</button><button value="ok">Salva</button></menu>
+    </form>
+  </dialog>
+
+  <dialog id="dlg-monster">
+    <form method="dialog" id="form-monster">
+      <h2>Aggiungi PNG</h2>
+      <label>Nome <input name="name" maxlength="36" required></label>
+      <label>Quantità (le copie sono numerate) <input name="count" type="number" min="1" max="20" value="1"></label>
+      <label>Tipo
+        <select name="kind"><option value="monster">Mostro</option><option value="ally">Alleato</option></select>
+      </label>
+      <label>Slot iniziale <input name="slot" type="number" required></label>
+      <menu><button type="button" value="cancel" class="secondary" data-close>Annulla</button><button value="ok">Aggiungi</button></menu>
+    </form>
+  </dialog>
+
+  <dialog id="dlg-token">
+    <form method="dialog" id="form-token">
+      <h2>Modifica targhetta</h2>
+      <p class="hint privacy-hint">Usa nomi di fantasia: niente nomi reali né altri dati personali.</p>
+      <label>Nome <input name="name" maxlength="40" required></label>
+      <label>Giocatore <input name="playerName" maxlength="40"></label>
+      <label>Tipo
+        <select name="kind"><option value="player">Giocatore</option><option value="monster">Mostro</option><option value="ally">Alleato</option></select>
+      </label>
+      <label>Colore <input name="color" type="color"></label>
+      <menu>
+        <button type="button" id="btn-delete" class="danger">Elimina</button>
+        <button type="button" value="cancel" class="secondary" data-close>Annulla</button>
+        <button value="ok">Salva</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <dialog id="dlg-config">
+    <form method="dialog" id="form-config">
+      <h2>Impostazioni della board</h2>
+      <p class="hint">Le targhette fuori dal nuovo intervallo vanno sullo slot di confine.</p>
+      <label>Slot minimo <input name="minSlot" type="number" required></label>
+      <label>Slot massimo <input name="maxSlot" type="number" required></label>
+      <menu><button type="button" value="cancel" class="secondary" data-close>Annulla</button><button value="ok">Applica</button></menu>
+    </form>
+    <section id="owner-zone">
+      <h3>Zona pericolosa</h3>
+      <button type="button" id="btn-delete-board" class="danger-solid">Elimina la board…</button>
+    </section>
+  </dialog>
+
+  <dialog id="dlg-delete">
+    <form method="dialog" id="form-delete">
+      <h2>Eliminare la board?</h2>
+      <p class="hint">Verranno eliminate per tutti la board <b id="delete-name"></b> e tutte le sue targhette. Non si può annullare.</p>
+      <label>Scrivi il nome della board per confermare <input name="confirm" autocomplete="off"></label>
+      <menu><button type="button" value="cancel" class="secondary" data-close>Annulla</button><button value="ok" id="btn-confirm-delete" class="danger-solid" disabled>Elimina</button></menu>
+    </form>
+  </dialog>
+
+  <script src="/app.js" type="module"></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+# Alternativa a systemd: il tunnel cloudflared deve puntare a http://localhost:3000
+services:
+  tracker:
+    build: .
+    restart: unless-stopped
+    ports: ["127.0.0.1:3000:3000"]
+    volumes: [tracker-data:/data]
+    environment:
+      HOST: 0.0.0.0 # dentro il container; la porta è pubblicata solo su 127.0.0.1
+      BOARD_TTL_DAYS: 365
+volumes:
+  tracker-data:

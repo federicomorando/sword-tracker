@@ -1,0 +1,30 @@
+[Unit]
+Description=SwORD Tracker
+After=network.target
+
+[Service]
+Type=simple
+# L'utente viene sostituito da deploy/install.sh (RUN_USER)
+User=CHANGEME
+WorkingDirectory=/opt/sword-tracker
+Environment=HOST=127.0.0.1
+Environment=PORT=3000
+Environment=DB_PATH=/opt/sword-tracker-data/tracker.db
+Environment=BOARD_TTL_DAYS=365
+ExecStart=/usr/bin/node /opt/sword-tracker/server/index.js
+Restart=on-failure
+RestartSec=5
+
+# Security hardening
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/opt/sword-tracker-data
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+RestrictRealtime=yes
+RestrictNamespaces=yes
+LockPersonality=yes
+
+[Install]
+WantedBy=multi-user.target

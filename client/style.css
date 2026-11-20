@@ -1,0 +1,100 @@
+:root {
+  --bg: #f3f4f6; --fg: #111827; --muted: #6b7280; --card: #fff; --line: #d1d5db;
+  --accent: #1f2937; --accent-fg: #f9fafb; --danger: #b91c1c; --slot-alt: #eceef2;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #111318; --fg: #e5e7eb; --muted: #9ca3af; --card: #1b1f27; --line: #374151;
+    --accent: #e5e7eb; --accent-fg: #111318; --danger: #f87171; --slot-alt: #161a21; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; font: 16px/1.4 system-ui, sans-serif; background: var(--bg); color: var(--fg); }
+main { max-width: 32rem; margin: 10vh auto; padding: 0 16px; }
+h1 { margin: 0; font-size: 1.3rem; }
+label { display: block; margin: .6rem 0; font-size: .9rem; color: var(--muted); }
+input, select { display: block; width: 100%; margin-top: .2rem; padding: .5rem; font: inherit;
+  color: var(--fg); background: var(--card); border: 1px solid var(--line); border-radius: 6px; }
+input[type=color] { height: 2.4rem; padding: 2px; }
+button { font: inherit; padding: .45rem .8rem; border: 1px solid var(--accent); border-radius: 6px;
+  background: var(--accent); color: var(--accent-fg); cursor: pointer; }
+button.secondary { background: transparent; color: var(--fg); border-color: var(--line); }
+button.danger { background: transparent; color: var(--danger); border-color: var(--danger); margin-right: auto; }
+header { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; padding: 10px 16px;
+  background: var(--card); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 2; }
+.actions { display: flex; flex-wrap: wrap; gap: .4rem; margin-left: auto; }
+.status { font-size: .8rem; color: var(--muted); }
+.status.ok::before { content: '● '; color: #16a34a; }
+.status.off::before { content: '● '; color: #dc2626; }
+.error { margin: 8px 16px; padding: .5rem .8rem; background: var(--danger); color: #fff; border-radius: 6px; }
+#slots { list-style: none; margin: 0 auto; padding: 8px 16px 40px; max-width: 48rem; }
+.slot { display: flex; align-items: stretch; gap: 10px; min-height: 3.2rem; border-bottom: 1px solid var(--line); }
+.slot:nth-child(even) { background: var(--slot-alt); }
+.slot.over { outline: 2px dashed var(--accent); outline-offset: -2px; }
+.slot-num { flex: 0 0 2.6rem; display: flex; align-items: center; justify-content: flex-end; font-weight: 700;
+  font-variant-numeric: tabular-nums; color: var(--muted); }
+.slot-tokens { flex: 1; display: flex; flex-wrap: wrap; align-content: center; gap: 6px; padding: 6px 0; min-height: 3rem; }
+.token { display: flex; align-items: center; gap: 4px; padding: 4px 4px 4px 2px; border-radius: 8px; color: #fff;
+  cursor: grab; user-select: none; touch-action: manipulation; border: 2px solid transparent; }
+.token.dragging { opacity: .4; }
+.token.drop-before { box-shadow: -4px 0 0 var(--accent); }
+.token.light { color: #000; }
+.token.light .move button { background: rgba(0,0,0,.15); color: #000; }
+.token .label { cursor: pointer; line-height: 1.15; }
+.token .label small { display: block; opacity: .85; font-size: .7rem; }
+.token .move { display: flex; flex-direction: column; }
+.token .move + .move { margin-left: 2px; }
+.token .move button { padding: 0 6px; line-height: 1.1; font-size: .75rem; border: 0; background: rgba(255,255,255,.2); color: #fff; }
+.token .move button:first-child { border-radius: 4px 4px 0 0; }
+.token .move button:last-child { border-radius: 0 0 4px 4px; margin-top: 1px; }
+.token.mine { border-color: var(--fg); }
+dialog { border: 1px solid var(--line); border-radius: 10px; background: var(--card); color: var(--fg);
+  width: min(92vw, 24rem); }
+dialog::backdrop { background: rgba(0,0,0,.5); }
+dialog h2 { margin: 0 0 .4rem; font-size: 1.1rem; }
+menu { display: flex; gap: .5rem; justify-content: flex-end; padding: 0; margin: 1rem 0 0; }
+.hint { color: var(--muted); font-size: .85rem; margin: 0; }
+@media (max-width: 480px) { .actions button { padding: .4rem .55rem; font-size: .85rem; } }
+/* su telefono l'intestazione (3 righe di pulsanti) non resta fissa: toglierebbe troppo spazio alla board */
+@media (max-width: 600px) { header { position: static; } }
+
+/* spunta "ha già agito" */
+.acted-box { display: flex; align-items: center; padding: 4px 4px 4px 6px; margin: 0; cursor: pointer; color: inherit; }
+.acted-box input { width: 1.25rem; height: 1.25rem; margin: 0; cursor: pointer; accent-color: #111; }
+.token.acted .label { opacity: .6; text-decoration: line-through; }
+
+/* Reset turn: separato dagli altri pulsanti, si attiva tenendo premuto */
+.reset-turn { position: relative; overflow: hidden; margin-left: 1.5rem; padding: .3rem .8rem; line-height: 1.1;
+  background: transparent; color: var(--danger); border-color: var(--danger); user-select: none; touch-action: none;
+  -webkit-touch-callout: none; }
+.reset-turn small { display: block; font-size: .65rem; opacity: .8; }
+.reset-turn::after { content: ''; position: absolute; inset: 0; background: var(--danger); opacity: .35; transform: scaleX(0);
+  transform-origin: left; pointer-events: none; }
+.reset-turn.holding::after { transform: scaleX(1); transition: transform 1.2s linear; }
+@media (max-width: 480px) { .reset-turn { margin-left: 0; } }
+
+/* help discreto in fondo alla pagina */
+.help { max-width: 48rem; margin: 0 auto; padding: 0 16px 28px; font-size: .8rem; color: var(--muted); }
+.help summary { cursor: pointer; width: fit-content; opacity: .7; }
+.help summary:hover, .help details[open] summary { opacity: 1; }
+.help-body { margin-top: .5rem; line-height: 1.5; }
+.help-body p { margin: .5rem 0; }
+.help-body ul { margin: .5rem 0; padding-left: 1.1rem; }
+.help-body li { margin: .25rem 0; }
+.help code { font-size: .95em; }
+#slots { padding-bottom: 16px; }
+
+.help-row { display: flex; flex-wrap: wrap; gap: .4rem 1.4rem; }
+.help-row details { flex: 0 0 auto; }
+.help-row details[open] { flex-basis: 100%; }
+.help a { color: inherit; }
+
+/* gestione board (eliminazione) */
+#owner-zone { margin-top: 1rem; padding-top: .8rem; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: .5rem; align-items: flex-start; }
+#owner-zone h3 { margin: 0; font-size: .95rem; }
+#owner-zone .hint { margin: 0; }
+button.danger-solid { background: var(--danger); border-color: var(--danger); color: #fff; }
+button.danger-solid:disabled { opacity: .45; cursor: not-allowed; }
+
+.privacy-hint { margin-top: .3rem; }
+
+/* home e "board eliminata" sono più strette: il footer si allinea */
+.narrow .help { max-width: 32rem; }
