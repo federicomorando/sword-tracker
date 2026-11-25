@@ -1,5 +1,6 @@
 node_modules/
 data/
 .env
-# deploy specifico di questa macchina (symlink a una cartella fuori dal repo)
+# note e deploy specifici di questo setup (il repo è pubblico)
 deploy/local
+CLAUDE.local.md

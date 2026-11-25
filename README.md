@@ -73,6 +73,9 @@ Se compaiono cookie, aggiorna la nota in `client/index.html`.
 - Nome non risolvibile subito dopo la creazione: cache DNS negativa dei resolver, passa da sola.
 - Configurazione realmente in uso: `journalctl -u cloudflared | grep 'Updated to new configuration'`.
 
+Alternativa senza `sudo`: un servizio systemd **d'utente** (`~/.config/systemd/user/`, con `loginctl enable-linger`) con le stesse variabili d'ambiente
+(`HOST=127.0.0.1`, `PORT`, `DB_PATH`); le direttive di hardening di `deploy/sword-tracker.service` che richiedono privilegi vanno omesse.
+
 Alternativa con Docker (non provata): `docker compose up -d`, porta pubblicata solo su 127.0.0.1:3000.
 
 ## Licenza
